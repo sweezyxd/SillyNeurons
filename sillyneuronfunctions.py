@@ -15,6 +15,8 @@ def layer(a, w, b, activation):
         result = ReLU(np.dot(w, a) + b)
     if activation == "softmax":
         result = softmax(np.dot(w, a) + b)
+    if activation == "sigmoid":
+        result = sigmoid(np.dot(w, a) + b)
     return result
 
 
@@ -34,6 +36,13 @@ def deriv_ReLU(a):
 def softmax(a):
     a = a - np.max(a)
     return np.exp(a) / np.sum(np.exp(a))
+
+
+def sigmoid(a, deriv=False):
+    a = 1 / (1 + np.exp(-a))
+    if deriv:
+        a = a * (1-a)
+    return a
 
 
 # Manually one hot encoding the expected output (don't ask why).
@@ -66,8 +75,7 @@ def backprop(W1, B1, W2, B2, A2, A1, X, Y, r):
     return W1 - r * dW, B1 - r * dB, W2 - r * dW2, B2 - r * dB2
 
 
-def update_softmax(A2, A1, Y):
-    dZ = A2 - Y
+def update_softmax(A1, dZ):
     dW = multiply(dZ, A1)
     dB = np.sum(dZ)
     return dW, dB, dZ
@@ -78,6 +86,26 @@ def update_ReLU(W2, A1, A2, Z):
     dW = multiply(dZ, A1)
     dB = np.sum(dZ)
     return dW, dB, dZ
+
+
+def update_sigmoid(W2, A1, A2, Z):
+    dZ = np.dot(W2.T, Z) * sigmoid(A2, deriv=True)
+    dW = multiply(dZ, A1)
+    dB = np.sum(dZ)
+    return dW, dB, dZ
+
+
+def update_sigmoid_output(A1, dZ):
+    dW = multiply(dZ, A1)
+    dB = np.sum(dZ)
+    return dW, dB, dZ
+
+
+def update_sigmoid(W2, A1, A2, Z):
+    dz = np.dot(W2.T, Z) * sigmoid(A2, deriv=True)
+    dw = multiply(dz, A1)
+    db = np.sum(dz)
+    return dw, db, dz
 
 
 def sub(arr1, arr2):

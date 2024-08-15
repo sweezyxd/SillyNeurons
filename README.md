@@ -1,4 +1,4 @@
-# SillyNeurons
+# SNEURONS
 
 sillyneuron is a lightweight Python module designed to provide a simple implementation of a feedforward neural network for educational purposes. It offers basic functionalities for initializing weights and biases, performing forward propagation with ReLU, sigmoid and Softmax activations, and implementing backpropagation for training a neural network.
 
